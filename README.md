@@ -20,6 +20,8 @@ Note: Purchase fees are included when calculating the cost and sell fees are sub
 Python 3
 
 # Usage
+Generate a fills file from January 1st to December 31st of the prior year (as all transactions are currently considered to be short-term)
+
 python3 coin_tax_calc.py <fills.csv>
 
 # Disclaimer: While this program is simple, there could be mistakes; so I cannot give any gurantees that this is calculating your own personal taxes correctly. Please use this program at your own risk and ensure that you are submitting your taxes correctly.
