@@ -20,6 +20,7 @@ The way this program works is that it uses the FIFO method to calculate capital 
 6) It also prints a list of BUY transactions that had no corresponding SELL. So you probably want to store that info for next year.
 
 Note: Purchase fees are included when calculating the cost and sell fees are subtracted when calculating proceeds. I believe that's the correct handling for tax purposes (someone please tell me if I'm wrong).
+Also, this software probably doesn't handle buying one token with another token (non USD or USDC) trades. I don't know. I haven't done any of those so I don't know what the fills file generates for those.
 
 # Prerequisite
 Python 3
@@ -27,8 +28,14 @@ Python 3
 # Usage
 Generate a fills file from January 1st to December 31st of the prior year (as all transactions are currently considered to be short-term)
 
-python3 coin_tax_calc.py <fills.csv>
+python3 coin_tax_calc.py -f <fills.csv>
 
 It if fails because it can't find BUY txns that pre-date a SELL, generate a fills file going back further and drop in the needed BUY record(s)
 
+Optional args:
+* -t <token_abbreviation> (for processing only a single token from the input file)
+* -o <output_filename> (name the txn output file something other than the default: out.csv)
+* -u <unsold_filename> (name the unsold lots file something other than the default: unsold.csv)
+* -p <partial_lots_filename> (name the partially sold lots file something other than the default: partial_sells.csv)
+  
 # Disclaimer: While this program is simple, there could be mistakes; so I cannot give any gurantees that this is calculating your own personal taxes correctly. Please use this program at your own risk and ensure that you are submitting your taxes correctly.
