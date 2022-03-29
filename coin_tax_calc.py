@@ -190,15 +190,22 @@ def main():
         print("These have been saved to: " + args.unsold_lots_file)
         print("You may want to put these into next year's fills list; and in some cases where a partial lot was sold, you will want to replace entries in next year's file with entries from this file")
         with open(args.unsold_lots_file, "w", newline="") as unsold_out:
-            unsold_out.write(EXPECTED_HEADER + ",Partially sold" + os.linesep)
+            unsold_out.write(EXPECTED_HEADER + os.linesep)
             for buy in extra_buys:
+                if 'partial_lot' in buy:
+                    continue
                 for field in EXPECTED_HEADER.split(","):
                     unsold_out.write(str(buy[field]) + ",")
-                if 'partial_lot' in buy:
-                    unsold_out.write("True")
-                else:
-                    unsold_out.write("False")
                 unsold_out.write(os.linesep)
+
+        with open(args.partially_sold_lots_file, "w", newline="") as partial_lots_out:
+            partial_lots_out.write(EXPECTED_HEADER + os.linesep)
+            for buy in extra_buys:
+                if 'partial_lot' not in buy:
+                    continue
+                for field in EXPECTED_HEADER.split(","):
+                    partial_lots_out.write(str(buy[field]) + ",")
+                partial_lots_out.write(os.linesep)
     
     print("TOTAL cost: " + str(total_cost))
     print("TOTAL proceeds: " + str(total_proceeds))
