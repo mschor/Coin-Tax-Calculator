@@ -1,13 +1,18 @@
 # Coin-Tax-Calculator
-Simple program to calculate capital gains or losses using a Coinbase Pro fills file.
+Simple program to calculate capital gains or losses using a fills file from Coinbase Pro.
 
 Doesn't yet make a distinction between long-term and short-term gains; although that would be simple enough to add.
 
-Sorry, that's all it does. I needed to figure out my own taxes this year and it was very complicated because I wrote a small trading bot who was busy making a few dollars here and there.
+It outputs:
+* A file of all transaction records (token, cost, proceeds, gain/loss)
+* A file of all unsold lots
+* A separate file for partially sold lots
 
-The way it works is that it uses the FIFO method to calculate capital gains as follows:
+I needed to figure out my own taxes this year and it was very complicated because I wrote a small trading bot who was busy making a few dollars here and there.
 
-1) It categorizes and sorts all of your transactions per token and per "side" (buy or sell)
+The way this program works is that it uses the FIFO method to calculate capital gains as follows:
+
+1) It categorizes and sorts all of your transactions per token and per "side" (buy or sell) and by date
 2) It then iterates over all of your SELL transactions; one token at a time
 3) It examines the first BUY transaction for that token.
 4) If that lot is not large enough to cover the SELL, it loops over additional BUYs and averages them until it can process the SELL.
@@ -15,11 +20,22 @@ The way it works is that it uses the FIFO method to calculate capital gains as f
 6) It also prints a list of BUY transactions that had no corresponding SELL. So you probably want to store that info for next year.
 
 Note: Purchase fees are included when calculating the cost and sell fees are subtracted when calculating proceeds. I believe that's the correct handling for tax purposes (someone please tell me if I'm wrong).
+Also, this software probably doesn't handle buying one token with another token (non USD or USDC) trades. I don't know. I haven't done any of those so I don't know what the fills file generates for those.
 
 # Prerequisite
 Python 3
 
 # Usage
-python3 coin_tax_calc.py <fills.csv>
+Generate a fills file from January 1st to December 31st of the prior year (as all transactions are currently considered to be short-term)
 
+python3 coin_tax_calc.py -f <fills.csv>
+
+It if fails because it can't find BUY txns that pre-date a SELL, generate a fills file going back further and drop in the needed BUY record(s)
+
+Optional args:
+* -t <token_abbreviation> (for processing only a single token from the input file)
+* -o <output_filename> (name the txn output file something other than the default: out.csv)
+* -u <unsold_filename> (name the unsold lots file something other than the default: unsold.csv)
+* -p <partial_lots_filename> (name the partially sold lots file something other than the default: partial_sells.csv)
+  
 # Disclaimer: While this program is simple, there could be mistakes; so I cannot give any gurantees that this is calculating your own personal taxes correctly. Please use this program at your own risk and ensure that you are submitting your taxes correctly.
